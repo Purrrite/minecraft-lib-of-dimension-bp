@@ -1,0 +1,60 @@
+{
+    "format_version": 2,
+    "header": {
+        "description": "Example vanilla behavior pack",
+        "name": "차원의 도서관 행동 팩",
+        "uuid": "98de0fa2-2ff4-43e5-98ff-5a6bda51d059",
+        "version": [
+            0,
+            0,
+            1
+        ],
+        "min_engine_version": [
+            1,
+            21,
+            70
+        ]
+    },
+    "modules": [
+        {
+            "description": "MainScript",
+            "type": "data",
+            "uuid": "ece801a3-0764-4939-996c-58e3c78aad7b",
+            "version": [
+                0,
+                0,
+                1
+            ]
+        },
+        {
+            "type": "script",
+            "description": "MainScript",
+            "language": "javascript",
+            "entry": "scripts/main.js",
+            "uuid": "2c0514f3-072d-49b8-ab4a-c6ece507738a",
+            "version": [
+                0,
+                0,
+                1
+            ]
+        }
+    ],
+    "dependencies": [
+        {
+            "module_name": "@minecraft/server",
+            "version": "1.19.0"
+        },
+        {
+            "module_name": "@minecraft/server-ui",
+            "version": "1.2.0"
+        },
+        {
+            "uuid": "2cbfa7fd-6bf0-4346-ae24-48eedcf114fd",
+            "version": [
+                0,
+                0,
+                1
+            ]
+        }
+    ]
+}

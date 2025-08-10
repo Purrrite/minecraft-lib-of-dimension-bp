@@ -55,6 +55,7 @@ function assignTagsToPlayers() {
                         for (const tag of tags) {
                             player.removeTag(tag);
                             player.addTag("__cleared");
+                            musicCoolDown.delete(player.id); // 음악 쿨다운 초기화
                             console.log(`${player.name}의 태그 제거됨`);
                             continue;
                         }
@@ -71,6 +72,7 @@ function assignTagsToPlayers() {
                             player.removeTag(tag);
                             player.addTag("__cleared");
                             dimension.runCommandAsync(`stopsound "${player.name}"`);
+                            musicCoolDown.delete(player.id); // 음악 쿨다운 초기화
                             console.log(`${player.name}의 사운드 정지 및 태그 제거됨`);
                             continue;
                         }
@@ -81,6 +83,7 @@ function assignTagsToPlayers() {
                 if (!player.hasTag(nameTag) && nameTag !== "removetag" && nameTag !== "stopsound") {
                     player.addTag(nameTag);
                     player.removeTag("__cleared"); // __cleared 태그 제거
+                    musicCoolDown.delete(player.id); // 음악 쿨다운 초기화
                     console.log(`태그 '${nameTag}'를 ${player.name}에게 부여함`);
                 }
             }

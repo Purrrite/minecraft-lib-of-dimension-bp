@@ -15,7 +15,7 @@ export const MUSIC_DATA = {
     theme1: {
         title: "차원의 도서관",
         id: "theme1",
-        durationTwoTicks: 860, // Duration in ticks (2 tick = 1/10 second)
+        durationTwoTicks: 857, // Duration in ticks (2 tick = 1/10 second)
         volume: 1,
     },
     theme2: {

@@ -1,6 +1,7 @@
 import { world, system } from "@minecraft/server";
 import { musicSystemTick } from "./gamemusic/index.js";
-import { MUSIC_DATA, musicCoolDown } from "./gamemusic/index.js";
+import { musicCoolDown } from "./gamemusic/index.js";
+import { dialogFunction } from "./dialog/index.js";
 
 let tickCounter = 0;
 //Global tick counter for managing intervals
@@ -8,8 +9,6 @@ system.runInterval(() => {
     tickCounter++;
 
     if (tickCounter % 2 === 0) {
-        const dimension = world.getDimension("overworld");
-        const armorStands = dimension.getEntities({ type: "minecraft:armor_stand" });
         assignTagsToPlayers(); // 2 틱마다 실행
         musicSystemTick()
     }
@@ -35,6 +34,11 @@ function assignTagsToPlayers() {
     for (const player of world.getAllPlayers()) {
         const playerLoc = player.location;
 
+        const playerTag = player.getTags()
+        if (playerTag.length === 0) {
+            player.addTag("__cleared"); // 플레이어가 태그가 없을 때 __cleared 태그를 추가
+        }
+
         for (const stand of armorStands) {
             const standLoc = stand.location;
             const nameTag = stand.nameTag?.trim();
@@ -44,39 +48,36 @@ function assignTagsToPlayers() {
                 && Math.floor(playerLoc.x) === Math.floor(standLoc.x)
                 && Math.floor(playerLoc.z) === Math.floor(standLoc.z)
             ) {
-                if (!nameTag) continue;
+                if (!nameTag) {
+                    continue
+                }
 
                 // removetag: 모든 태그 제거 (단, __cleared 태그 없을 때만)
                 if (nameTag === "removetag") {
-                    const tagswithtemp = player.getTags();
-                    const tags = tagswithtemp.filter(tag => tag !== "__cleared");
-
                     if (!player.hasTag("__cleared")) {
-                        for (const tag of tags) {
+                        const tagsToRemove = player.getTags().filter(tag => tag !== "__cleared");
+                        for (const tag of tagsToRemove) {
                             player.removeTag(tag);
-                            player.addTag("__cleared");
-                            musicCoolDown.delete(player.id); // 음악 쿨다운 초기화
-                            console.log(`${player.name}의 태그 제거됨`);
-                            continue;
                         }
+                        player.addTag("__cleared");
+                        musicCoolDown.delete(player.id);
+                        console.log(`${player.name}의 태그 제거됨`);
                     }
+                    continue;
                 }
 
-                // stopsound: 태그 제거 + 사운드 정지 (단, __cleared 태그 없을 때만)
                 if (nameTag === "stopsound") {
-                    const tagswithtemp = player.getTags();
-                    const tags = tagswithtemp.filter(tag => tag !== "__cleared");
-
                     if (!player.hasTag("__cleared")) {
-                        for (const tag of tags) {
+                        const tagsToRemove = player.getTags().filter(tag => tag !== "__cleared");
+                        for (const tag of tagsToRemove) {
                             player.removeTag(tag);
-                            player.addTag("__cleared");
-                            dimension.runCommandAsync(`stopsound "${player.name}"`);
-                            musicCoolDown.delete(player.id); // 음악 쿨다운 초기화
-                            console.log(`${player.name}의 사운드 정지 및 태그 제거됨`);
-                            continue;
                         }
+                        player.addTag("__cleared");
+                        dimension.runCommandAsync(`stopsound "${player.name}"`);
+                        musicCoolDown.delete(player.id);
+                        console.log(`${player.name}의 사운드 정지 및 태그 제거됨`);
                     }
+                    continue;
                 }
 
                 // 일반 태그 부여

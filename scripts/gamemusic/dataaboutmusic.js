@@ -2,7 +2,7 @@
 // A function about the Gamemusic (BGM)
 // =======================================
 
-export const MUSIC_DATA = {
+export const DATA_ABOUT_MUSIC = {
     // ======================================= 
     stopsound: {
         title: "멈춰랏! (이스터에그, 이걸 찾는 사람이 있을까?)",

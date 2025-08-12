@@ -1,5 +1,5 @@
 import { world, system } from "@minecraft/server";
-import { MUSIC_DATA } from "./dataaboutmusic.js";
+import { DATA_ABOUT_MUSIC } from "./dataaboutmusic.js";
 
 /**
  * 플레이어별 음악 상태를 저장하는 Map 객체입니다.
@@ -43,8 +43,8 @@ export function musicSystemTick() {
             }
 
             // MUSIC_DATA를 순회하며 플레이어가 가진 태그와 일치하는 음악을 찾습니다.
-            for (const musicId in MUSIC_DATA) {
-                const musicInfo = MUSIC_DATA[musicId];
+            for (const musicId in DATA_ABOUT_MUSIC) {
+                const musicInfo = DATA_ABOUT_MUSIC[musicId];
 
                 if (player.hasTag(musicInfo.id)) {
                     player.runCommandAsync(`playsound ${musicInfo.id} @s ~ ~ ~ ${musicInfo.volume} 1`);

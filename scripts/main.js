@@ -1,6 +1,6 @@
 import { world, system } from "@minecraft/server";
 import { musicSystemTick, musicCoolDown } from "./gamemusic/index.js";
-import { dialogFunction, dialogdata } from "./dialog/index.js";
+import { dialogFunction, charaterColorMap, dialogData } from "./dialog/index.js";
 
 let tickCounter = 0;
 //Global tick counter for managing intervals

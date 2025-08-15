@@ -1,7 +1,6 @@
 import { world, system } from "@minecraft/server";
-import { musicSystemTick } from "./gamemusic/index.js";
-import { musicCoolDown } from "./gamemusic/index.js";
-import { dialogFunction } from "./dialog/index.js";
+import { musicSystemTick, musicCoolDown } from "./gamemusic/index.js";
+import { dialogFunction, dialogdata } from "./dialog/index.js";
 
 let tickCounter = 0;
 //Global tick counter for managing intervals
@@ -26,7 +25,7 @@ system.runInterval(() => {
 
 /**
  * 전역 태그 부여 함수입니다.
- * 플레이어가 아머스탠드보다 3~3.1블록 위에 있을 때 해당 아머스탠드의 이름 태그를 플레이어에게 부여합니다는 상세적으로 적용됩니다.
+ * 플레이어가 아머스탠드보다 3~3.1블록 위에 있을 때 해당 아머스탠드의 이름 태그를 플레이어에게 부여합니다, 아머스탠드 로직은 상세적으로 적용됩니다.
  */
 function playerTagManager() {
     const dimension = world.getDimension("overworld");
@@ -37,8 +36,6 @@ function playerTagManager() {
         const playerTag = player.getTags()
         const tagsWithoutCleared = player.getTags().filter(tag => tag !== "__cleared");
         const hasCleared = playerTag.includes("__cleared");
-
-
 
         if (playerTag.length === 0) {
             player.addTag("__cleared");

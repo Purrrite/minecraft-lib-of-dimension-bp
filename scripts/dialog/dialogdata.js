@@ -1,5 +1,17 @@
-export const dialogDataIntro = {
-    "scene_1": [
+
+export const charaterColorMap = {
+    "우진": "§a",
+    "다현": "§u",
+    "솔": "§e",
+    "다은": "§p"
+};
+
+/**
+ * 다이얼로그 데이터 이름은 무조건 카멜 케이스 형식으로 작성해야 합니다.
+ * 태그 포맷 : `dialog_<scene_name>_<number>`
+ */
+export const dialogData = {
+    "intro": [
         ["우진", "…어두워."],
         ["다현", "벽에 낡은 시계가 걸려 있다."],
         ["솔", "초침이 움직이지 않는다."],
@@ -11,7 +23,7 @@ export const dialogDataIntro = {
         ["우진", "심장이 빨리 뛴다."],
         ["다현", "밖에 누가 있는 건가?"]
     ],
-    "scene_2": [
+    "introEvent": [
         ["우진", "문이 열렸다."],
         ["다현", "복도는 비어 있다."],
         ["솔", "바닥에 먼지가 수북하다."],
@@ -23,7 +35,7 @@ export const dialogDataIntro = {
         ["우진", "안에는 아무도 없다."],
         ["다현", "책상 위엔 종이 한 장."]
     ],
-    "scene_3": [
+    "nextChap": [
         ["우진", "종이에 글씨가 쓰여 있다."],
         ["다현", "읽을 수 없는 필체다."],
         ["솔", "墨처럼 번져 있다."],

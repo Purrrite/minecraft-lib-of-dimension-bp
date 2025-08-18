@@ -38,11 +38,10 @@ export function dialogFunction() {
                 : currnetScene[0];
 
             // 대사 출력
-            player.runCommandAsync(`tellraw @s {"rawtext":[{"text":"${speaker}: ${currnetScene[1]}"}]}`);
+            player.runCommandAsync(`tellraw @s {"rawtext":[{"text":"${speaker} : ${currnetScene[1]}"}]}`);
 
             // 태그 제거 (대화가 끝난 후)
             player.removeTag(tag);
         }
     }
 }
-

@@ -5,11 +5,7 @@ import { DATA_ABOUT_MUSIC } from "./dataaboutmusic.js";
  * 플레이어별 음악 상태를 저장하는 Map 객체입니다.
  * Key: player.id (플레이어의 고유 ID)
  * Value: { currentSong: string, cooldown: number } (현재 곡 ID, 남은 쿨다운 시간)
- * @typedef {{ currentSong: string, cooldown: number }} MusicState 
- * @type {Map<string, MusicState>} 
  */
-
-
 export const musicCoolDown = new Map();
 
 /**

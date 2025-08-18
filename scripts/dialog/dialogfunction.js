@@ -21,12 +21,14 @@ export function dialogFunction() {
             // 씬 존재 여부 체크
             if (!(scenename in dialogData)) {
                 console.warn(`대화 데이터 "${scenename}"이(가) 정의되어 있지 않습니다.`);
+                player.removeTag(tag);
                 continue;
             }
 
             // 대사 번호 범위 체크
             if (systemNumber < 0 || systemNumber >= dialogData[scenename].length) {
                 console.warn(`대화 번호 "${number}"이(가) 범위를 벗어났습니다. "${scenename}" 씬의 대화는 ${dialogData[scenename].length}개입니다.`);
+                player.removeTag(tag);
                 continue;
             }
 
@@ -38,7 +40,7 @@ export function dialogFunction() {
                 : currnetScene[0];
 
             // 대사 출력
-            player.runCommandAsync(`tellraw @s {"rawtext":[{"text":"${speaker} : ${currnetScene[1]}"}]}`);
+            player.runCommandAsync(`tellraw @a {"rawtext":[{"text":"${speaker} : ${currnetScene[1]}"}]}`);
 
             // 태그 제거 (대화가 끝난 후)
             player.removeTag(tag);

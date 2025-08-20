@@ -54,15 +54,10 @@ function playerTagManager() {
         }
 
         if (playerTag.length === 0) player.addTag("__cleared");
-
-        if (hasCleared && tagsWithoutCleared.length > 0) {
-            player.removeTag("__cleared");
-        }
-
-
+        if (hasCleared && tagsWithoutCleared.length > 0) player.removeTag("__cleared");
 
         /**
-        *   플레이어가 아머스탠드보다 3~3.1블록 위에 있을 때
+        *   플레이어가 아머스탠드보다 3~3.1블록 위에 있을 때, xz좌표는 0.5 범위
         */
         for (const stand of armorStands) {
             const standLoc = stand.location;

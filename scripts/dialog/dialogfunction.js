@@ -39,10 +39,15 @@ export function dialogFunction() {
                 ? charaterColorMap[currnetScene[0]] + currnetScene[0] + "§f"
                 : currnetScene[0];
 
+            if (number === 0) {
+                for (const deployDialog of dialogData[scenename]) {
+                    player.runCommandAsync(`tellraw @a {"rawtext":[{"text":"${deployDialog[0]} : ${deployDialog[1]}"}]}`);
+                }
+                player.removeTag(tag);
+            }
+
             // 대사 출력
             player.runCommandAsync(`tellraw @a {"rawtext":[{"text":"${speaker} : ${currnetScene[1]}"}]}`);
-
-            // 태그 제거 (대화가 끝난 후)
             player.removeTag(tag);
         }
     }

@@ -38,12 +38,11 @@ function playerTagManager() {
 
         if (player.hasTag("removetag") || player.hasTag("stopsound")) {
             // 플레이어가 "removetag" 또는 "stopsound" 태그를 가지고 있다면, 해당 태그를 가진 플레이어의 모든 태그를 제거합니다.
-            if (player.hasTag("stopsound")) {
+            const tagsWithoutClearedNOW = player.getTags().filter(tag => tag !== "__cleared"); //한번 더 가져오기
+            if (tagsWithoutClearedNOW.includes("stopsound")) {
                 dimension.runCommandAsync(`stopsound "${player.name}"`);
                 musicCoolDown.delete(player.id);
             }
-
-            const tagsWithoutClearedNOW = player.getTags().filter(tag => tag !== "__cleared"); //한번 더 가져오기
             for (const tag of tagsWithoutClearedNOW) {
                 player.removeTag(tag);
             }

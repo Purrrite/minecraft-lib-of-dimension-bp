@@ -132,4 +132,16 @@ export const DATA_ABOUT_MUSIC = {
         durationTwoTicks: 1265,
         volume: 1,
     },
+    intro: {
+        title: "Tragic story",
+        id: "intro",
+        durationTwoTicks: 940,
+        volume: 1,
+    },
+    truth: {
+        title: "The Truth",
+        id: "truth",
+        durationTwoTicks: 2515,
+        volume: 1,
+    },
 }

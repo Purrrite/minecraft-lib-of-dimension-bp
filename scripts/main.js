@@ -13,10 +13,6 @@ system.runInterval(() => {
         dialogFunction()
     }
 
-    if (tickCounter % 2 === 0) {
-        // debugLog(); // 20 틱마다 디버그 메시지 출력
-    }
-
     if (tickCounter >= 200) {
         tickCounter = 0;
     }
@@ -46,6 +42,12 @@ function playerTagManager() {
             for (const tag of tagsWithoutClearedNOW) {
                 player.removeTag(tag);
             }
+
+            // ====================================
+            // 이 부분은 만들면서 상당히 고생을 했지만 아직도 문제가 해결되지 않았습니다.
+            // 아예 코드 구조를 바꿔야 할 것 같습니다.
+            // 미묘한 타이밍 문제라고 단정짓기에는 너무나도 불안정한 부분입니다.
+            //=====================================
 
             player.addTag("__cleared");
             console.log(`${player.name}의 태그 제거됨 (removetag 또는 stopsound 태그 존재함)`);
@@ -104,13 +106,8 @@ function playerTagManager() {
         }
     }
 }
-
-function debugLog() {
-    // 디버그 메시지를 콘솔에 출력
-    const players = world.getAllPlayers();
-    for (const player of players) {
-        const tags = player.getTags();
-
-        player.runCommandAsync(`title @s actionbar ${player.name}의 태그: ${tags}, cooldown: ${cooldownValue}`);
-    }
-}
+// ====================================
+// 
+// 현재 이 코드는 일회성 실행이 너무나도 많아서 함수를 여려개 만들기로 리팩토링을 할 필요가 있습니다.
+//
+//=====================================

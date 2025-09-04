@@ -67,7 +67,7 @@ function playerTagManager() {
             if (standLoc.y + 3.1 >= playerLoc.y && playerLoc.y >= standLoc.y + 3 &&
                 standLoc.x + 0.5 >= playerLoc.x && playerLoc.x >= standLoc.x - 0.5 &&
                 standLoc.z + 0.5 >= playerLoc.z && playerLoc.z >= standLoc.z - 0.5
-            ) {
+            ) { //방향은? 이쪽으로! 이쪽으로! <============
                 if (!nameTag) continue;
 
                 // removetag: 모든 태그 제거 (단, __cleared 태그 없을 때만)
@@ -97,8 +97,7 @@ function playerTagManager() {
 
                 // 일반 태그 부여
                 if (!player.hasTag(nameTag) && nameTag !== "removetag" && nameTag !== "stopsound") {
-                    player.addTag(nameTag);
-                    player.removeTag("__cleared"); // __cleared 태그 제거
+                    addTagToAllPlayers(nameTag)// __cleared 태그 제거
                     musicCoolDown.delete(player.id); // 음악 쿨다운 초기화
                     console.log(`태그 '${nameTag}'를 ${player.name}에게 부여함`);
                 }
@@ -106,8 +105,35 @@ function playerTagManager() {
         }
     }
 }
+function addTagToAllPlayers(tag) {
+    for (const player of world.getAllPlayers()) {
+        player.addTag(tag);
+        player.removeTag("__cleared");
+    }
+}
+
+function removeTagFromAllPlayers(tag) {
+    for (const player of world.getAllPlayers()) {
+        const playerTag = player.getTags()
+        const tagsWithoutCleared = player.getTags().filter(tag => tag !== "__cleared");
+        const hasCleared = playerTag.includes("__cleared");
+        if (tagsWithoutCleared.includes(tag)) {
+            player.removeTag(tag);
+            if (tagsWithoutCleared.length === 1 && !hasCleared) {
+                player.addTag("__cleared");
+            }
+            console.log(`태그 '${tag}'를 ${player.name}에게서 제거함`);
+        }
+    }
+}
 // ====================================
-// 
+// 2025.9.4
+// 아 함수 리팩토링 머리아파.. 아직 미완성. 디버깅도 해야될거에요.
+// 좀 쉬었다 해야지.
+// I HATE PlayerTagManager Function !
+//=====================================
+
+// ====================================
+// 2025.9.4
 // 현재 이 코드는 일회성 실행이 너무나도 많아서 함수를 여려개 만들기로 리팩토링을 할 필요가 있습니다.
-//
 //=====================================

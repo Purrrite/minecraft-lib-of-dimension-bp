@@ -1,131 +1,161 @@
-import { world, system } from "@minecraft/server";
-import { musicSystemTick, musicCoolDown } from "./gamemusic/index.js";
+import { world, system, Player } from "@minecraft/server";
+import { musicSystemTick, musicCoolDown, DATA_ABOUT_MUSIC } from "./gamemusic/index.js";
 import { dialogFunction } from "./dialog/dialogfunction.js";
 
 let tickCounter = 0;
-//Global tick counter for managing intervals
+
+// 메인 루프
 system.runInterval(() => {
     tickCounter++;
 
+    managePlayerTags();
+    dialogFunction();
+
     if (tickCounter % 2 === 0) {
-        playerTagManager(); // 2 틱마다 실행
-        musicSystemTick()
-        dialogFunction()
+        musicSystemTick();
     }
 
-    if (tickCounter >= 200) {
-        tickCounter = 0;
-    }
-
+    if (tickCounter >= 200) tickCounter = 0;
 }, 1);
+
 /**
- * playerTagManager는 플레이어의 위치와 태그를 관리하는 함수입니다.
- * 플레이어가 아머스탠드 위에 있을 때, 해당 아머스탠드의 이름표에 따라 플레이어에게 태그를 부여하거나 제거합니다.
+ * 모든 플레이어의 태그를 관리하는 메인 함수
  */
-function playerTagManager() {
-    const dimension = world.getDimension("overworld");
-    const armorStands = dimension.getEntities({ type: "minecraft:armor_stand" });
+function managePlayerTags() {
+    const players = world.getAllPlayers();
+    const armorStands = world.getDimension("overworld").getEntities({ type: "minecraft:armor_stand" });
 
-    for (const player of world.getAllPlayers()) {
-        const playerLoc = player.location;
-        const playerTag = player.getTags()
-        const tagsWithoutCleared = player.getTags().filter(tag => tag !== "__cleared");
-        const hasCleared = playerTag.includes("__cleared");
-
-        if (player.hasTag("removetag") || player.hasTag("stopsound")) {
-            // 플레이어가 "removetag" 또는 "stopsound" 태그를 가지고 있다면, 해당 태그를 가진 플레이어의 모든 태그를 제거합니다.
-            const tagsWithoutClearedNOW = player.getTags().filter(tag => tag !== "__cleared"); //한번 더 가져오기
-            if (tagsWithoutClearedNOW.includes("stopsound")) {
-                dimension.runCommandAsync(`stopsound "${player.name}"`);
-                musicCoolDown.delete(player.id);
-            }
-            for (const tag of tagsWithoutClearedNOW) {
-                player.removeTag(tag);
-            }
-
-            // ====================================
-            // 이 부분은 만들면서 상당히 고생을 했지만 아직도 문제가 해결되지 않았습니다.
-            // 아예 코드 구조를 바꿔야 할 것 같습니다.
-            // 미묘한 타이밍 문제라고 단정짓기에는 너무나도 불안정한 부분입니다.
-            //=====================================
-
-            player.addTag("__cleared");
-            console.log(`${player.name}의 태그 제거됨 (removetag 또는 stopsound 태그 존재함)`);
-            continue; // 태그 제거 후 다음 플레이어로 넘어갑니다.
-        }
-
-        if (playerTag.length === 0) player.addTag("__cleared");
-        if (hasCleared && tagsWithoutCleared.length > 0) player.removeTag("__cleared");
-
-        /**
-        *   플레이어가 아머스탠드보다 3~3.1블록 위에 있을 때, xz좌표는 0.5 범위
-        */
-        for (const stand of armorStands) {
-            const standLoc = stand.location;
-            const nameTag = stand.nameTag?.trim();
-
-            if (standLoc.y + 3.1 >= playerLoc.y && playerLoc.y >= standLoc.y + 3 &&
-                standLoc.x + 0.5 >= playerLoc.x && playerLoc.x >= standLoc.x - 0.5 &&
-                standLoc.z + 0.5 >= playerLoc.z && playerLoc.z >= standLoc.z - 0.5
-            ) { //방향은? 이쪽으로! 이쪽으로! <============
-                if (!nameTag) continue;
-
-                // removetag: 모든 태그 제거 (단, __cleared 태그 없을 때만)
-                if (!player.hasTag("__cleared") && nameTag === "removetag") {
-
-                    for (const tag of tagsWithoutCleared) {
-                        player.removeTag(tag);
-                    }
-                    player.addTag("__cleared");
-                    musicCoolDown.delete(player.id);
-                    console.log(`${player.name}의 태그 제거됨`);
-                    continue; // 태그 제거 후 다음 플레이어로 넘어갑니다.
-                }
-
-                // stopsound: 모든 태그 제거 + 음악 재생 중지 (단, __cleared 태그 없을 때만)
-                if (!player.hasTag("__cleared") && nameTag === "stopsound") {
-                    for (const tag of tagsWithoutCleared) {
-                        player.removeTag(tag);
-                    }
-                    player.addTag("__cleared");
-                    dimension.runCommandAsync(`stopsound "${player.name}"`);
-                    musicCoolDown.delete(player.id);
-                    console.log(`${player.name}의 사운드 정지 및 태그 제거됨`);
-                    continue; // 태그 제거 후 다음 플레이어로 넘어갑니다.
-                }
-
-
-                // 일반 태그 부여
-                if (!player.hasTag(nameTag) && nameTag !== "removetag" && nameTag !== "stopsound") {
-                    addTagToAllPlayers(nameTag)// __cleared 태그 제거
-                    musicCoolDown.delete(player.id); // 음악 쿨다운 초기화
-                    console.log(`태그 '${nameTag}'를 ${player.name}에게 부여함`);
-                }
-            }
-        }
+    for (const player of players) {
+        processSinglePlayer(player, armorStands);
     }
 }
-function addTagToAllPlayers(tag) {
-    for (const player of world.getAllPlayers()) {
-        player.addTag(tag);
+
+/**
+ * 단일 플레이어의 태그 로직을 처리하는 함수
+ * @param {Player} player 처리할 플레이어 객체
+ * @param {Entity[]} armorStands 감지할 아머 스탠드 배열
+ */
+
+function processSinglePlayer(player, armorStands) {
+    // 1. 'removetag' 또는 'stopsound' 태그가 있으면 모든 태그를 즉시 제거하고 로직 종료
+    if (player.hasTag("removetag") || player.hasTag("stopsound")) {
+        const stopSound = player.hasTag("stopsound");
+        clearPlayerTags(player, { stopSound });
+        return; // 이 플레이어에 대한 추가 처리를 중단
+    }
+
+    // 2. '__cleared' 상태 관리
+    const tags = player.getTags();
+    const hasClearedTag = tags.includes("__cleared");
+    const hasOtherTags = tags.some(tag => tag !== "__cleared");
+
+    if (!hasClearedTag && !hasOtherTags) {
+        player.addTag("__cleared");
+    } else if (hasClearedTag && hasOtherTags) {
         player.removeTag("__cleared");
     }
-}
 
-function removeTagFromAllPlayers(tag) {
-    for (const player of world.getAllPlayers()) {
-        const playerTag = player.getTags()
-        const tagsWithoutCleared = player.getTags().filter(tag => tag !== "__cleared");
-        const hasCleared = playerTag.includes("__cleared");
-        if (tagsWithoutCleared.includes(tag)) {
-            player.removeTag(tag);
-            if (tagsWithoutCleared.length === 1 && !hasCleared) {
-                player.addTag("__cleared");
-            }
-            console.log(`태그 '${tag}'를 ${player.name}에게서 제거함`);
-        }
+    // 3. 아머 스탠드 근처에 있는지 확인하고 태그 부여/제거 로직 실행
+    for (const stand of armorStands) {
+        if (!isPlayerNearStand(player, stand)) continue;
+
+        const nameTag = stand.nameTag?.trim();
+        if (!nameTag) continue;
+
+        // 플레이어가 아머스탠드와 상호작용했으므로 루프를 중단하여 중복 처리를 방지
+        handleArmorStandInteraction(player, nameTag);
+        break;
     }
 }
+
+/**
+ * 플레이어와 아머 스탠드의 상호작용을 처리
+ * @param {Player} player 
+ * @param {string} nameTag 
+ */
+function handleArmorStandInteraction(player, nameTag) {
+    // '__cleared' 상태일 때만 태그 제거 로직이 작동하도록 함
+    const canBeCleared = !player.hasTag("__cleared");
+
+    switch (nameTag) {
+        case "removetag":
+            if (canBeCleared) clearPlayerTags(player, { stopSound: false });
+            break;
+
+        case "stopsound":
+            if (canBeCleared) clearPlayerTags(player, { stopSound: true });
+            break;
+
+        default:
+            // 아직 해당 태그가 없을 때만 새로 추가
+            if (!player.hasTag(nameTag)) {
+                addTagToPlayer(player, nameTag);
+            }
+            break;
+    }
+}
+
+/**
+ * 플레이어의 모든 태그를 정리하고 상태를 초기화하는 함수
+ * @param {Player} player 
+ * @param {{stopSound: boolean}} options 
+ */
+function clearPlayerTags(player, { stopSound = false }) {
+    const tagsToRemove = player.getTags().filter(tag => tag !== "__cleared");
+
+    for (const tag of tagsToRemove) {
+        player.removeTag(tag);
+    }
+
+    if (stopSound) {
+        player.runCommandAsync(`stopsound "${player.name}"`);
+    }
+
+    musicCoolDown.delete(player.id);
+    player.addTag("__cleared");
+    console.log(`${player.name}의 태그가 정리되었습니다. (옵션: ${JSON.stringify({ stopSound })})`);
+}
+
+/**
+ * 특정 플레이어에게 태그를 추가하는 함수
+ * @param {Player} player 
+ * @param {string} tag 
+ */
+function addTagToPlayer(player, tag) {
+    player.addTag(tag);
+    player.removeTag("__cleared"); // 새로운 태그가 생겼으므로 __cleared 상태는 제거
+
+    // 추가된 태그가 음악 관련 태그인지 확인
+    if (DATA_ABOUT_MUSIC.hasOwnProperty(tag)) {
+        musicCoolDown.delete(player.id);
+    }
+    console.log(`'${tag}' 태그를 ${player.name}에게 부여함`);
+}
+
+/**
+ * 플레이어가 아머 스탠드의 특정 범위 내에 있는지 확인
+ * @param {Player} player 
+ * @param {Entity} stand 
+ * @returns {boolean}
+ */
+function isPlayerNearStand(player, stand) {
+    const playerLoc = player.location;
+    const standLoc = stand.location;
+
+    const isVerticallyAligned = playerLoc.y >= standLoc.y + 3 && playerLoc.y <= standLoc.y + 3.1;
+    const isHorizontallyAligned = Math.abs(playerLoc.x - standLoc.x) <= 0.5 && Math.abs(playerLoc.z - standLoc.z) <= 0.5;
+
+    return isVerticallyAligned && isHorizontallyAligned;
+}
+
+// ====================================
+// 2025.9.6
+// AI에게 리팩토링을 맡겨보았다. 잘했는데, 남아있는 문제는 해결되지 않았다.
+// 남은 문제는 내가 직접 해결해야 할 듯.
+// 함수 실행을 2틱마다가 아니라 1틱마다 실행해야 했다. 1회성 실행인 경우를 감지하지를 못하는 문제가 있었다.
+// 이렇게 허무하다고..?
+//=====================================
+
 // ====================================
 // 2025.9.4
 // 아 함수 리팩토링 머리아파.. 아직 미완성. 디버깅도 해야될거에요.

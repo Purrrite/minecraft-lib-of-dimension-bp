@@ -142,7 +142,7 @@ function isPlayerNearStand(player, stand) {
     const playerLoc = player.location;
     const standLoc = stand.location;
 
-    const isVerticallyAligned = playerLoc.y >= standLoc.y + 3 && playerLoc.y <= standLoc.y + 3.1;
+    const isVerticallyAligned = playerLoc.y >= standLoc.y + 3 && playerLoc.y <= standLoc.y + 3.4;
     const isHorizontallyAligned = Math.abs(playerLoc.x - standLoc.x) <= 0.5 && Math.abs(playerLoc.z - standLoc.z) <= 0.5;
 
     return isVerticallyAligned && isHorizontallyAligned;
@@ -152,7 +152,7 @@ function isPlayerNearStand(player, stand) {
 // 2025.9.6
 // AI에게 리팩토링을 맡겨보았다. 잘했는데, 남아있는 문제는 해결되지 않았다.
 // 남은 문제는 내가 직접 해결해야 할 듯.
-// 함수 실행을 2틱마다가 아니라 1틱마다 실행해야 했다. 1회성 실행인 경우를 감지하지를 못하는 문제가 있었다.
+// 함수 실행을 2틱마다가 아니라 1틱마다 실행해야 했다. 1회성 실행인 경우를 감지하지를 못하는 문제가 있었으나 해결이 되었다.
 // 이렇게 허무하다고..?
 //=====================================
 

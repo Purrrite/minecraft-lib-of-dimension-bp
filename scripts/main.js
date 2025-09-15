@@ -143,6 +143,10 @@ function isPlayerNearStand(player, stand) {
     const standLoc = stand.location;
 
     const isVerticallyAligned = playerLoc.y >= standLoc.y + 3 && playerLoc.y <= standLoc.y + 3.4;
+    //================================
+    //원래 3.1이였는데, 너무 조건이 깐깐한것 같아서 3.4로 수정되었습니다.
+    //플레이어 아래 블록 1, 아머스탠드 키 2블록 해서 (실제로는 1.8블록정도이지만) 3블록 위로 설정되었습니다.
+    // ================================
     const isHorizontallyAligned = Math.abs(playerLoc.x - standLoc.x) <= 0.5 && Math.abs(playerLoc.z - standLoc.z) <= 0.5;
 
     return isVerticallyAligned && isHorizontallyAligned;

@@ -30,7 +30,7 @@ function displayDialogue(player, dialogueArray) {
 }
 /**
  * dialogFunction은 플레이어가 특정 태그를 가지고 있을 때, 해당 태그에 맞는 대화 데이터를 불러와 처리하는 함수입니다.
- * 발판은 밟은 경우 dialogData에 정의된 대화 내용을 플레이어에게 보여줍니다.
+ * 포맷에 맞는 태그가 부여된 경우 dialogData에 정의된 대화 내용을 플레이어에게 보여줍니다.
  * `tag dialog_<scene_name>_<number>` 형식으로 플레이어에게 부여되어야 합니다.
  * number가 0일 경우 해당 씬의 모든 대사가 출력됩니다.
  */

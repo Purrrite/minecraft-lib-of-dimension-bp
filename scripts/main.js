@@ -4,9 +4,9 @@ import { dialogFunction } from "./dialog/dialogfunction.js";
 
 let tickCounter = 0;
 
-// 메인 루프
+// メインループ
 system.runInterval(() => {
-    tickCounter++;
+    tickCounter = tickCounter >= 200 ? 0 : tickCounter + 1;
 
     managePlayerTags();
     dialogFunction();
@@ -15,11 +15,12 @@ system.runInterval(() => {
         musicSystemTick();
     }
 
-    if (tickCounter >= 200) tickCounter = 0;
+
+
 }, 1);
 
 /**
- * 모든 플레이어의 태그를 관리하는 메인 함수
+ * タグ管理メイン関数
  */
 function managePlayerTags() {
     const players = world.getAllPlayers();
@@ -31,20 +32,20 @@ function managePlayerTags() {
 }
 
 /**
- * 단일 플레이어의 태그 로직을 처리하는 함수
+ * シングルプレイヤーのタグロジック処理関数
  * @param {Player} player 처리할 플레이어 객체
  * @param {Entity[]} armorStands 감지할 아머 스탠드 배열
  */
 
 function processSinglePlayer(player, armorStands) {
-    // 1. 'removetag' 또는 'stopsound' 태그가 있으면 모든 태그를 즉시 제거하고 로직 종료
+    // 1. 'removetag' と 'stopsound' タグがあればタグを除去と終了する
     if (player.hasTag("removetag") || player.hasTag("stopsound")) {
         const stopSound = player.hasTag("stopsound");
         clearPlayerTags(player, { stopSound });
-        return; // 이 플레이어에 대한 추가 처리를 중단
+        return;
     }
 
-    // 2. '__cleared' 상태 관리
+    // 2. '__cleared' 状態管理
     const tags = player.getTags();
     const hasClearedTag = tags.includes("__cleared");
     const hasOtherTags = tags.some(tag => tag !== "__cleared");
@@ -143,11 +144,11 @@ function isPlayerNearStand(player, stand) {
     const standLoc = stand.location;
 
     const isVerticallyAligned = playerLoc.y >= standLoc.y + 3 && playerLoc.y <= standLoc.y + 3.4;
+    const isHorizontallyAligned = Math.abs(playerLoc.x - standLoc.x) <= 0.5 && Math.abs(playerLoc.z - standLoc.z) <= 0.5;
     //================================
     //원래 3.1이였는데, 너무 조건이 깐깐한것 같아서 3.4로 수정되었습니다.
     //플레이어 아래 블록 1, 아머스탠드 키 2블록 해서 (실제로는 1.8블록정도이지만) 3블록 위로 설정되었습니다.
     // ================================
-    const isHorizontallyAligned = Math.abs(playerLoc.x - standLoc.x) <= 0.5 && Math.abs(playerLoc.z - standLoc.z) <= 0.5;
 
     return isVerticallyAligned && isHorizontallyAligned;
 }
@@ -171,3 +172,9 @@ function isPlayerNearStand(player, stand) {
 // 2025.9.4
 // 현재 이 코드는 일회성 실행이 너무나도 많아서 함수를 여려개 만들기로 리팩토링을 할 필요가 있습니다.
 //=====================================
+
+// ====================================
+// 2025.11.14
+// 노드 모듈이라는게 있었구나.. 다운로드 받으니깐 메서드 다뜨고 사용법 다뜨고 신세계다.
+//=====================================
+

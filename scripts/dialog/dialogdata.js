@@ -704,6 +704,7 @@ export const dialogData = {
         ["다현", "그래. 여길 빠져나가자."],
         ["다현", "마침 뒤에 열쇠가 있더라고."],
         ["다현", "흑.."],
+        //여기 파트 진짜 개선이 필요함, 싸우는 씬이랑 감옥 씬이 데체 왜 있는거임?
     ],
     "cellarLibrary": [
         ["나", "아마 호수 아래 저 책에서는 나가는 방법도 있을거야."],
@@ -1300,3 +1301,8 @@ export const dialogData = {
         ["", ""],
     ],
 };
+
+// 모든 key(Scene) 나열
+Object.keys(dialogData).forEach(key => {
+    console.log(key);
+});

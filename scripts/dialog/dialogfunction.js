@@ -57,8 +57,8 @@ export function dialogFunction() {
                 for (const dialogue of scene) {
                     displayDialogue(player, dialogue);
                 }
-            } else {
-                const systemNumber = number - 1; // 배열 인덱스용 0부터 시작
+            } else { // number != 0
+                const systemNumber = number - 1;
 
                 // 대사 번호 범위 체크
                 if (systemNumber < 0 || systemNumber >= dialogData[scenename].length) {

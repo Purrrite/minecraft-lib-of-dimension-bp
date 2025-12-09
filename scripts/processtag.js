@@ -1,3 +1,6 @@
+import { world, Player } from "@minecraft/server";
+import { musicCoolDown, DATA_ABOUT_MUSIC } from "./gamemusic/index.js";
+
 /**
  * タグ管理メイン関数
  */

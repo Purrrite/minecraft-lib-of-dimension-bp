@@ -1,15 +1,19 @@
-import { world, system, Player } from "@minecraft/server";
-import { musicSystemTick, musicCoolDown, DATA_ABOUT_MUSIC } from "./gamemusic/index.js";
+import { system, world, BlockPermutation } from "@minecraft/server";
+import { musicSystemTick } from "./gamemusic/index.js";
 import { dialogFunction } from "./dialog/dialogfunction.js";
 import { managePlayerTags } from "./processtag.js";
+import { fractalFunction } from "./fractal.js";
 
 let tickCounter = 0;
+
+fractalFunction();
 
 // メインループ
 system.runInterval(() => {
     tickCounter = tickCounter >= 200 ? 0 : tickCounter + 1;
 
     managePlayerTags();
+    processQueue();
     dialogFunction();
 
     if (tickCounter % 2 === 0) {

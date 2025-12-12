@@ -2,18 +2,21 @@ import { system, world, BlockPermutation } from "@minecraft/server";
 import { musicSystemTick } from "./gamemusic/index.js";
 import { dialogFunction } from "./dialog/dialogfunction.js";
 import { managePlayerTags } from "./processtag.js";
+
+// === 프랙탈 특별 모듈 ===
 import { fractalFunction } from "./fractal.js";
+fractalFunction();
+// =======================
 
 let tickCounter = 0;
 
-fractalFunction();
+
 
 // メインループ
 system.runInterval(() => {
     tickCounter = tickCounter >= 200 ? 0 : tickCounter + 1;
 
     managePlayerTags();
-    processQueue();
     dialogFunction();
 
     if (tickCounter % 2 === 0) {

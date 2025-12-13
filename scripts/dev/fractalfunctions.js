@@ -5,7 +5,7 @@
  * @param {*} z 
  * @returns {boolean} 이 블록이 꽉 찬 블록인지 여부
  */
-export function isGlobalMenger(x, y, z) {
+export function isMengerSponge(x, y, z) {
     let cx = Math.abs(x);
     let cy = Math.abs(y);
     let cz = Math.abs(z);

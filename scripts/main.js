@@ -3,10 +3,10 @@ import { musicSystemTick } from "./gamemusic/index.js";
 import { dialogFunction } from "./dialog/dialogfunction.js";
 import { managePlayerTags } from "./processtag.js";
 
-// === 프랙탈 특별 모듈 ===
+// === Fractal spacial module ===
 import { fractalFunction } from "./dev/fractal.js";
 fractalFunction();
-// =======================
+// ==============================
 
 // メインループ
 let tickCounter = 0;

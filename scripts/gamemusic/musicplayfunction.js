@@ -21,7 +21,7 @@ export function musicSystemTick() {
             // 만약 플레이어가 게임을 나갔다면, Map에서 데이터를 삭제하여 메모리 누수를 방지합니다.
             if (!playerEntity) {
                 musicCoolDown.delete(playerId);
-                console.log(`[MusicDebug] 접속 종료한 플레이어(${playerId})의 음악 상태를 정리했습니다.`);
+                console.log(`음악 디버그 | 접속 종료한 플레이어(${playerId})의 음악 상태를 정리했습니다.`);
                 continue;
             }
 
@@ -31,7 +31,7 @@ export function musicSystemTick() {
             // 쿨다운이 0 이하로 내려가면, 플레이어 상태를 Map에서 제거하여 새 음악을 받을 수 있도록 합니다.
             if (state.cooldown <= 0) {
                 musicCoolDown.delete(playerId);
-                console.log(`[MusicDebug] ${playerEntity.name}의 쿨다운이 종료되었습니다.`);
+                console.log(`음악 디버그 | ${playerEntity.name}의 쿨다운이 종료되었습니다.`);
             }
         }
 
@@ -59,14 +59,14 @@ export function musicSystemTick() {
                     });
 
                     // 디버깅을 위한 로그를 출력합니다.
-                    console.log(`[MusicDebug] ${player.name}에게 '${musicInfo.title}' 재생 시작. (쿨다운: ${cooldownValue}회)`);
+                    console.log(`음악 디버그 | ${player.name}에게 '${musicInfo.title}' 재생 시작. (쿨다운: ${cooldownValue}회)`);
                     break;
                 }
             }
         }
     } catch (error) {
         // 스크립트 실행 중 오류 발생 시, 전체 시스템이 멈추지 않도록 로그만 남깁니다.
-        console.error(`[MusicSystem Error] musicSystemTick 함수에서 오류가 발생했습니다: ${error}`);
+        console.error(`디버그 오류 | musicSystemTick 함수에서 오류가 발생했습니다: ${error}`);
     }
     // --- 3. 디버그 메시지 출력 ---
     const players = world.getAllPlayers();

@@ -1,12 +1,23 @@
-import { system } from "@minecraft/server";
+import { world, system } from "@minecraft/server";
 import { musicSystemTick } from "./gamemusic/index.js";
 import { dialogFunction } from "./dialog/dialogfunction.js";
 import { managePlayerTags } from "./processtag.js";
+// import { giveIllegalItem } from "./dev/getillagelitem.js";
 
 // === Fractal spacial module ===
-import { fractalFunction } from "./dev/fractal.js";
-fractalFunction();
+// import { fractalFunction } from "./dev/fractal.js";
+// fractalFunction();
 // ==============================
+
+// const events = Object.keys(world.beforeEvents);
+// world.afterEvents.worldInitialize.subscribe(() => {
+//     world.sendMessage("§e[사용 가능한 BeforeEvents 목록]§r");
+//     if (events.length === 0) {
+//         world.sendMessage("§c목록이 비어있습니다. manifest 버전을 낮추세요!");
+//     } else {
+//         world.sendMessage(events.join(", "));
+//     }
+// });
 
 // メインループ
 let tickCounter = 0;

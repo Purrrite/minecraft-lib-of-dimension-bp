@@ -1,8 +1,8 @@
 import { world, Player } from "@minecraft/server";
-import { musicCoolDown, DATA_ABOUT_MUSIC } from "./gamemusic/index.js";
+import { musicCoolDown, DATA_ABOUT_MUSIC } from "../music/index.js";
 
 /**
- * タグ管理メイン関数
+ * Main function for managing player tags.
  */
 export function managePlayerTags() {
     const players = world.getAllPlayers();
@@ -14,20 +14,20 @@ export function managePlayerTags() {
 }
 
 /**
- * シングルプレイヤーのタグロジック処理関数
- * @param {Player} player 처리할 플레이어 객체
- * @param {Entity[]} armorStands 감지할 아머 스탠드 배열
+ * Processes tag logic for a single player.
+ * @param {Player} player - The player object to process.
+ * @param {Entity[]} armorStands - Array of armor stands to detect.
  */
 
 function processSinglePlayer(player, armorStands) {
-    // 1. 'removetag' と 'stopsound' タグがあればタグを除去と終了する
+    // 1. If 'removetag' or 'stopsound' tags are present, clear tags and exit.
     if (player.hasTag("removetag") || player.hasTag("stopsound")) {
         const stopSound = player.hasTag("stopsound");
         clearPlayerTags(player, { stopSound });
         return;
     }
 
-    // 2. '__cleared' 状態管理
+    // 2. Manage '__cleared' state.
     const tags = player.getTags();
     const hasClearedTag = tags.includes("__cleared");
     const hasOtherTags = tags.some(tag => tag !== "__cleared");
@@ -38,14 +38,14 @@ function processSinglePlayer(player, armorStands) {
         player.removeTag("__cleared");
     }
 
-    // 3. 아머 스탠드 근처에 있는지 확인하고 태그 부여/제거 로직 실행
+    // 3. Check for nearby armor stands and execute tag 부여/제거 logic.
     for (const stand of armorStands) {
         if (!isPlayerNearStand(player, stand)) continue;
 
         const nameTag = stand.nameTag?.trim();
         if (!nameTag) continue;
 
-        // 플레이어가 아머스탠드와 상호작용했으므로 루프를 중단하여 중복 처리를 방지
+        // Player interacted with an armor stand, so break the loop to avoid duplicate processing.
         handleArmorStandInteraction(player, nameTag);
         break;
     }
@@ -116,10 +116,10 @@ function addTagToPlayer(player, tag) {
 }
 
 /**
- * 플레이어가 아머 스탠드의 특정 범위 내에 있는지 확인
- * @param {Player} player 
- * @param {Entity} stand 
- * @returns {boolean}
+ * Checks if a player is near an armor stand within a specific range.
+ * @param {Player} player - The player object.
+ * @param {Entity} stand - The armor stand entity.
+ * @returns {boolean} - True if the player is near the stand, false otherwise.
  */
 function isPlayerNearStand(player, stand) {
     const playerLoc = player.location;
@@ -127,10 +127,6 @@ function isPlayerNearStand(player, stand) {
 
     const isVerticallyAligned = playerLoc.y >= standLoc.y + 3 && playerLoc.y <= standLoc.y + 3.4;
     const isHorizontallyAligned = Math.abs(playerLoc.x - standLoc.x) <= 0.5 && Math.abs(playerLoc.z - standLoc.z) <= 0.5;
-    //================================
-    //원래 3.1이였는데, 너무 조건이 깐깐한것 같아서 3.4로 수정되었습니다.
-    //플레이어 아래 블록 1, 아머스탠드 키 2블록 해서 (실제로는 1.8블록정도이지만) 3블록 위로 설정되었습니다.
-    // ================================
-
+    
     return isVerticallyAligned && isHorizontallyAligned;
 }

@@ -1,5 +1,5 @@
 import { world } from "@minecraft/server";
-import { dialogData, charaterColorMap } from "./dialogdata.js";
+import { dialogData, charaterColorMap } from "./dialog_data.js";
 
 
 /**
@@ -74,10 +74,3 @@ export function dialogFunction() {
         }
     }
 }
-
-// ====================================
-// 이 다이얼로그에서 tag 방식을 이용한 호출은 마치 인게임에서 호출하는 함수랑 비슷하게 만들었습니다.
-// AI를 써서 코드 리팩토링 하라 했더니 나온 가장 마음에 드는 코드 중 하나입니다. 아! 최애는 역시 dialogdata.js죠!
-// 여기서 match라는 메서드가 있는지를 처음 알았습니다. 아마 파이선이나 C계열에서 스플릿 함수랑 비슷하지 않을까 합니다.
-// 삼향 연산자도 AI 써서 만들다가 처음 알았습니다. 매우 유용하더라고요.
-//=====================================

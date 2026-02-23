@@ -1,0 +1,26 @@
+{
+    "format_version": "1.20.0",
+    "minecraft:item": {
+        "description": {
+            "identifier": "custom:special_item",
+            "menu_category": {
+                "category": "items"
+            }
+        },
+        "components": {
+            "minecraft:icon": {
+                "texture": "diamond"
+            },
+            "minecraft:display_name": {
+                "value": "마법의 다이아몬드\n§b전설의 힘이 담긴\n§e다이아몬드입니다."
+            },
+            {
+                "minecraft:rarity": "epic"
+            },
+            {
+                "minecraft:glint": true
+            }
+        }
+    }
+}
+}

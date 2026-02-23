@@ -1,5 +1,5 @@
 import { world, system } from "@minecraft/server";
-import { DATA_ABOUT_MUSIC } from "./dataaboutmusic.js";
+import { DATA_ABOUT_MUSIC } from "./music_data.js";
 
 /**
  * 플레이어별 음악 상태를 저장하는 Map 객체입니다.
@@ -77,10 +77,3 @@ export function musicSystemTick() {
     }
 
 }
-
-// ====================================
-// 저는 아직도 이 코드가 정확히 무엇을 하는지 모릅니다.
-// AI를 딸깍해서 만들었는데.. 적어도 개발자가 되려면 이게 뭐하는건진 알아야 하지 않는가?
-// 아마 제가 클래스 부분에 취약한가 봅니다.
-// 플레이어에 표시되는 플레이어별 쿨타임, 태그 이런 맵이 어떻게 나오는지 제데로 알아야지..
-//=====================================

@@ -105,7 +105,7 @@ export const DATA_ABOUT_MUSIC = {
     empty8va: {
         title: "Empty Dimension (One Octave Higher)",
         id: "empty8va",
-        durationTwoTicks: 395,
+        durationTwoTicks: 400,
         volume: 1,
     },
     lab: {

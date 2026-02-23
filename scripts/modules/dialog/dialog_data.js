@@ -962,7 +962,14 @@ export const dialogData = {
     ],
     //이 이후 전부 미구현
     "memoryMuseumGoUp": [
-        ["", ""],
+        ["다현", "우리는 꼭 살아남고 말거야."],
+        ["다현", "..."],
+        ["나", "응. 꼭 살아남자."],
+        ["다현", "..."],
+    ],
+
+    "shouldWeMeetSol": [
+        ["나", "일단은 솔이 있는 곳으로 가는게 좋지 않을까?"],
     ],
 
     "labTogetherAfterMemory": [
